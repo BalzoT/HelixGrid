@@ -1,0 +1,38 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+pnpm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Dependency directories
+*node_modules/
+
+# Build output
+dist/
+.next/
+out/
+coverage/
+
+# Nx cache
+.nx/cache/
+.nx/workspace-data/
+
+# System files
+.DS_Store
+Thumbs.db
+
+# Env files
+.env
+.env.*
+!.env.example
+
+# Editor/IDE
+.idea/
+.vscode/
+
+# Misc
+.vercel/
+*.local
+

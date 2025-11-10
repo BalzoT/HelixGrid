@@ -1,0 +1,16 @@
+node_modules
+dist
+.next
+.nx
+.git
+.gitignore
+npm-debug.log*
+pnpm-debug.log*
+Dockerfile
+**/.DS_Store
+**/*.local
+**/.env*
+!/.env.example
+coverage
+tmp
+

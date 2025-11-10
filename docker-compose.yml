@@ -1,0 +1,79 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: helixgrid-db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: helixgrid
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./db:/db
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d helixgrid"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    depends_on:
+      db:
+        condition: service_healthy
+      api-migrate:
+        condition: service_completed_successfully
+    container_name: helixgrid-api
+    environment:
+      NODE_ENV: production
+      PORT: 3001
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/helixgrid?schema=public
+    ports:
+      - "3001:3001"
+
+  api-migrate:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+      target: migration
+    container_name: helixgrid-api-migrate
+    environment:
+      NODE_ENV: production
+      DATABASE_URL: postgresql://postgres:postgres@db:5432/helixgrid?schema=public
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: "no"
+
+  sim:
+    build:
+      context: .
+      dockerfile: apps/sim/Dockerfile
+    container_name: helixgrid-sim
+    environment:
+      NODE_ENV: production
+      PORT: 3002
+    ports:
+      - "3002:3002"
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+    container_name: helixgrid-web
+    environment:
+      NODE_ENV: production
+      PORT: 3000
+      NEXT_PUBLIC_API_URL: http://api:3001
+    depends_on:
+      - api
+    ports:
+      - "3000:3000"
+
+volumes:
+  pgdata:

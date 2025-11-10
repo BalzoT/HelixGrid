@@ -1,0 +1,48 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model PowerPlant {
+  id         String          @id @default(uuid()) @db.Uuid
+  name       String
+  latitude   Float?
+  longitude  Float?
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  ppas       PpaContract[]
+  readings   EnergyReading[]
+
+  @@map("power_plants")
+}
+
+model PpaContract {
+  id                  String      @id @default(uuid()) @db.Uuid
+  plantId             String      @db.Uuid
+  buyer               String
+  startDate           DateTime
+  endDate             DateTime?
+  rateCentsPerKwh     Decimal     @db.Decimal(10, 4)
+  createdAt           DateTime    @default(now())
+  updatedAt           DateTime    @updatedAt
+
+  plant PowerPlant @relation(fields: [plantId], references: [id], onDelete: Cascade)
+
+  @@map("ppa_contracts")
+}
+
+model EnergyReading {
+  id        String   @id @default(uuid()) @db.Uuid
+  plantId   String   @db.Uuid
+  ts        DateTime
+  kwh       Decimal  @db.Decimal(12, 6)
+
+  plant PowerPlant @relation(fields: [plantId], references: [id], onDelete: Cascade)
+
+  @@unique([plantId, ts], name: "reading_unique_plant_ts")
+  @@map("energy_readings")
+}

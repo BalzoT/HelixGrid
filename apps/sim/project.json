@@ -1,0 +1,48 @@
+{
+  "name": "sim",
+  "projectType": "application",
+  "root": "apps/sim",
+  "sourceRoot": "apps/sim/src",
+  "targets": {
+    "serve": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "TS_NODE_PROJECT=apps/sim/tsconfig.json node -r ts-node/register apps/sim/src/index.ts"
+      }
+    },
+    "build": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p apps/sim/tsconfig.build.json"
+      },
+      "dependsOn": ["^build"]
+    },
+    "start": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "node dist/apps/sim/index.js"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/sim/src/**/*.ts"
+        ]
+      }
+    },
+    "test": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "echo \"No tests for sim yet\""
+      }
+    },
+    "type-check": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "tsc -p apps/sim/tsconfig.json --noEmit"
+      }
+    }
+  },
+  "tags": []
+}
