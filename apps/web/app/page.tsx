@@ -1,4 +1,4 @@
-import { Button } from '@ui'
+import { Button } from '#ui'
 
 export default function Page() {
   return (
@@ -11,4 +11,3 @@ export default function Page() {
     </main>
   )
 }
-

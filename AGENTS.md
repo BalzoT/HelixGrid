@@ -16,7 +16,7 @@ Contributor guide for HelixGrid. This repo contains: A) Postgres DB schema for a
 - Use Nx caching and affected commands to speed CI.
 - Common commands: `pnpm nx serve api|web|sim`, `pnpm nx run-many -t build,test,lint`, `pnpm nx affected -t build,test,lint`, `pnpm nx graph`, `pnpm nx reset`.
 - The Makefile wraps Nx tasks for a consistent DX.
-- TS path alias: `@ui` -> `libs/ui/src/index.ts` in `tsconfig.base.json` for shared components.
+- TS alias: prefer subpath `#ui` -> `libs/ui/src/index.ts`. Defined in root `package.json` (`imports`) and `tsconfig.base.json` (`paths`) for tooling compatibility. Legacy `@ui` remains as fallback.
 - pnpm is enforced via preinstall; use `pnpm install` (not npm/yarn).
 
 ## Build, Test, and Development Commands

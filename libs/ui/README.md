@@ -8,10 +8,10 @@ Notes
 
 Example usage
 ```tsx
-// With Nx path alias (recommended):
+// Preferred subpath import (Node/TS):
+import { Button } from '#ui'
+// Fallback alias (tsconfig paths):
 // import { Button } from '@ui'
-// Or without alias yet:
-import { Button } from '../../libs/ui/src'
 
 export default function Page() {
   return <Button variant="secondary">Hello</Button>
