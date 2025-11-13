@@ -15,12 +15,16 @@
     "lint": "nx run-many -t lint --all",
     "type-check": "nx run-many -t type-check --all",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "prepare": "husky install",
+    "lint-staged": "lint-staged"
   },
   "devDependencies": {
     "@nx/workspace": "19.8.4",
     "@nx/eslint": "19.8.4",
     "@nx/next": "19.8.4",
+    "husky": "^9.1.6",
+    "lint-staged": "^15.2.10",
     "@types/node": "^20.14.12",
     "@types/react": "^18.2.79",
     "@types/react-dom": "^18.2.25",
@@ -40,6 +44,17 @@
     "tailwindcss": "^3.4.3",
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5.4.4"
+  },
+  "lint-staged": {
+    "**/*.{ts,tsx,js}": [
+      "eslint --fix --max-warnings=0"
+    ],
+    "**/*.{md,mdx,json,yml,yaml}": [
+      "prettier --write"
+    ],
+    "**/*.{css,scss}": [
+      "prettier --write"
+    ]
   },
   "dependencies": {
     "@ui": "workspace:*",

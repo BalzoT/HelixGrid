@@ -36,7 +36,5 @@ const server = http.createServer((req, res) => {
 
 const port = process.env.PORT ? Number(process.env.PORT) : 3002
 server.listen(port, () => {
-  // eslint-disable-next-line no-console
   console.log(`sim listening on http://localhost:${port}`)
 })
-

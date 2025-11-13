@@ -1,0 +1,21 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+set -eu
+
+# Husky passes refs on stdin: <local ref> <local sha> <remote ref> <remote sha>
+read -r LOCAL_REF LOCAL_SHA REMOTE_REF REMOTE_SHA || true
+
+if [ -n "${REMOTE_SHA:-}" ] && [ "$REMOTE_SHA" != "0000000000000000000000000000000000000000" ]; then
+  BASE="$REMOTE_SHA"
+  HEAD="${LOCAL_SHA:-HEAD}"
+else
+  # Fallback for new branches or missing remote sha
+  BASE="$(git rev-parse HEAD~1 2>/dev/null || echo HEAD)"
+  HEAD="$(git rev-parse HEAD 2>/dev/null || echo HEAD)"
+fi
+
+export NX_DAEMON=false
+echo "Running: nx affected -t type-check --base=$BASE --head=$HEAD"
+pnpm nx affected -t type-check --base="$BASE" --head="$HEAD"
+

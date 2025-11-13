@@ -1,4 +1,4 @@
-import { PrismaClient } from '@prisma/client'
+import { PrismaClient, Prisma } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
@@ -22,18 +22,16 @@ async function main() {
       plantId: plant.id,
       buyer: 'Acme Corp',
       startDate: new Date(),
-      rateCentsPerKwh: 12.5 as any,
+      rateCentsPerKwh: new Prisma.Decimal(12.5),
     },
   })
 }
 
 main()
   .catch((e) => {
-    // eslint-disable-next-line no-console
     console.error(e)
     process.exit(1)
   })
   .finally(async () => {
     await prisma.$disconnect()
   })
-

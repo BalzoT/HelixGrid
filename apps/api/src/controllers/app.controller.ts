@@ -10,7 +10,7 @@ export class AppController {
     try {
       await this.prisma.$queryRaw`SELECT 1`
       return { status: 'ok', db: 'ok' }
-    } catch (e) {
+    } catch {
       return { status: 'degraded', db: 'error' }
     }
   }
