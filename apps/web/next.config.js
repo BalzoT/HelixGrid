@@ -3,17 +3,10 @@ const path = require('path')
 
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    typedRoutes: true,
-  },
+  typedRoutes: true,
   output: 'standalone',
-  webpack: (config) => {
-    config.resolve.alias = {
-      ...(config.resolve.alias || {}),
-      '#ui': path.resolve(__dirname, '../../libs/ui/src'),
-    }
-    return config
-  },
+  // Transpile local workspace package
+  transpilePackages: ['@ui'],
 }
 
 module.exports = nextConfig

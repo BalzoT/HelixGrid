@@ -5,21 +5,23 @@ RUN corepack enable
 
 FROM base AS builder
 WORKDIR /workspace
-COPY package.json pnpm-lock.yaml pnpm-workspace.yaml nx.json tsconfig.base.json ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml tsconfig.base.json ./
 COPY apps/web ./apps/web
 COPY libs ./libs
-RUN pnpm install --frozen-lockfile
-RUN pnpm nx build web
+RUN --mount=type=cache,id=pnpm-store,target=/root/.local/share/pnpm/store pnpm install --frozen-lockfile --ignore-scripts
+RUN pnpm exec next build apps/web
 
 FROM node:20-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 # Copy Next standalone server and assets
-COPY --from=builder /workspace/dist/apps/web/.next/standalone ./
-COPY --from=builder /workspace/dist/apps/web/.next/static ./.next/static
+# Copy only the built app subtree from standalone so server.js is at project root
+COPY --from=builder /workspace/apps/web/.next/standalone/node_modules ./node_modules
+COPY --from=builder /workspace/apps/web/.next/standalone/apps/web ./
+COPY --from=builder /workspace/apps/web/.next/static ./.next/static
 COPY --from=builder /workspace/apps/web/public ./public
 ENV PORT=3000
 EXPOSE 3000
+USER node
 CMD ["node","server.js"]
-
